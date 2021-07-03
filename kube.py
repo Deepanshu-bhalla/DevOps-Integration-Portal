@@ -1,77 +1,77 @@
 #!/usr/bin/python3
-import subprocess
-import cgi
 
-print("content-type: text/html")
+print("content-type:text/html")
 print()
+
+import cgi
+import subprocess as sp
 
 f = cgi.FieldStorage()
 cmd = f.getvalue("x")
+val = cmd.split()
 
+#Creating deployment
+if  val[0]=="1":
+    dname = val[2]
+    iname = val[1]
+    o=sp.getoutput("sudo  kubectl create deployment {} --image={} --kubeconfig /root/admin.conf".format(dname,iname)) 
+    print(o)
 
-lower_cmd = cmd.lower()
-l_str = lower_cmd.split()
+#Creating pod
+elif  val[0]=="2":
+    pname = val[2]
+    iname = val[1]
+    o=sp.getoutput("sudo  kubectl run {} --image={} --kubeconfig /root/admin.conf".format(pname,iname)) 
+    print(o)
 
-Filter=["k8s","kubernetes","provide","for","just","up","me","my","to","or","plzz","please","do","using",      "is","which","whose","has","can","could","pods","pod","you","u","port","number","no.","deployment","hi","a",
-		",","no","with","the","all","having","name","named","hello","hey","display","print","of","upto","deployments",
-		"image"]
+#Delete pod
+elif  val[0]=="3":
+    pname = val[1]
+    o=sp.getoutput("sudo  kubectl delete pod {}  --kubeconfig /root/admin.conf".format(pname))
+    print(o)
 
-for i in range(0,len(l_str)):
-	if l_str[i] in Filter:
-		l_str[i] = ""
+#delete deployment
+elif  val[0]=="4":
+    dname = val[1]
+    o=sp.getoutput("sudo  kubectl delete deployment {} --kubeconfig /root/admin.conf".format(dname))
+    print(o)
 
-j_str = " ".join(l_str)
+#expose deployment
+elif  val[0]=="5":
+    dname = val[1]
+    port_no = val[2]
+    etype  = val[3]
+    o=sp.getoutput("sudo  kubectl expose deployment {} --type={} --port={} --kubeconfig /root/admin.conf".format(dname,etype,port_no)) 
+    print(o)
 
-j_str = j_str.split()
+#scale deployment
+elif  val[0]=="6":
+    dname = val[1]
+    replica= val[2]
+    o=sp.getoutput("sudo  kubectl scale deployment {} --replicas={} --kubeconfig /root/admin.conf".format(dname,replica)) 
+    print(o)
 
-if ("create" in j_str or "deploy" in j_str or "launch" in j_str or "make" in j_str) and len(j_str)<4:
-	command = "kubectl create deployment " + j_str[1] + " --image=httpd --kubeconfig admin.conf"
+#list pods
+elif val[0]=="7":
+    o=sp.getoutput("sudo  kubectl get pods --kubeconfig /root/admin.conf") 
+    print(o)
 
-elif ("create" in j_str or "deploy" in j_str or "launch" in j_str) and (len(j_str)<5 and "id" in j_str):
-	command = "kubectl create deployment " + j_str[1] + " --image=" + j_str[3] + " --kubeconfig admin.conf"
+#list deployments
+elif val[0]=="8":
+    o=sp.getoutput("sudo  kubectl get deployments --kubeconfig /root/admin.conf") 
+    print(o) 
+    
+#list services
+elif val[0]=="9":
+    o=sp.getoutput("sudo  kubectl get svc --kubeconfig /root/admin.conf") 
+    print(o)   
 
-elif ("get" in j_str or "show" in j_str) and len(j_str)<2:
-	command = "kubectl get pods --kubeconfig admin.conf"
+#thank you note
+elif val[0]=="10":
+     
+    print("I'm happy to help") 
 
-elif "describe" in j_str:
-	command = "kubectl describe pods --kubeconfig admin.conf"
-
-elif "expose" in j_str:
-	command = "kubectl expose deployment " + j_str[1] + " --type='NodePort' --port " + j_str[2] + " --kubeconfig admin.conf"
-
-elif "cluster" in j_str or "cluster's" in j_str or "cluster-info" in j_str or "info" in j_str or "details" in j_str:
-	command = "kubectl cluster-info --kubeconfig admin.conf"
-
-elif ("replicas" in j_str or "replica" in j_str or "copies" in j_str or "copy" in j_str) and len(j_str)>3:
-	command = "kubectl scale deployment " + j_str[3] + " --replicas=" + j_str[1] + " --kubeconfig admin.conf"
-
-elif "scale" in j_str:
-	command = "kubectl scale deployment " + j_str[1] + " --replicas=" + j_str[2] + " --kubeconfig admin.conf"
-
-elif "delete" in j_str and ("svc" in j_str or "service" in j_str):
-	command = "kubectl delete svc " + j_str[2] + " --kubeconfig admin.conf"
-
-elif "delete" in j_str or "remove" in j_str:
-	command = "kubectl delete pod " + j_str[1] + " --kubeconfig admin.conf"
-
-elif "service" in j_str or "svc" in j_str or "services" in j_str:
-	command = "kubectl get svc --kubeconfig admin.conf"
-
+#error
 else:
-	print("Check your command")
-
-
-
-output = subprocess.getoutput('sudo ' + command)
-print(output)
-
-
-
-
-
-
-
-
-
-
-
+    val[0]=="404"
+    print("Something went wrong...")
