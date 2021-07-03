@@ -26,7 +26,7 @@
     margin-left: 2%;
     box-shadow: -40px 30px 20px rgba(0, 0, 0, 0.3);
     border-radius: 7px;
-    height: 500px;
+    height: 550px;
     text-align: center;
 }
 
@@ -55,17 +55,17 @@
 }
 
 .output {
-    border: 0.5px solid #555;
+    border: 1px solid #555;
     width: 80%;
     border-radius: 10px;
     padding: 10px;
     background-color: #eeeeee;
+    scroll-behavior: auto;
     min-height: 200px;
-    margin-left: 60px;
-    overflow: auto;
+    margin-left: 70px;
+    overflow: hidden;
     overflow-x: scroll;
 }
-
 
 .bubbles img {
     width: 100px;
