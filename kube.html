@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Kubernetes</title>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="kube.css"/>
+</head>
+<body>
+<div class="banner">
+    <div class="bubbles">
+        <img src="bubbles/kubebubble1.png">
+        <img src="bubbles/kubebubble1.png">
+        <img src="bubbles/kubebubble1.png">
+        <img src="bubbles/kubebubble1.png">
+        <img src="bubbles/kubebubble1.png">
+        <img src="bubbles/kubebubble1.png">
+        <img src="bubbles/kubebubble1.png">
+        <img src="bubbles/kubebubble1.png">
+    </div>
+    <div class="box">
+        <br>
+        <h1>RUN COMMANDS HERE</h1>
+        <br>
+        <input class="input" type="text" placeholder="Enter Your Command.." id="inp">
+        <br>
+        <br>
+        <button class="btn" onClick="lw()">RUN</button>
+        <br>
+        <label class="col-form-label">Output</label>
+        <pre>
+			 <div class="output" id="output">
+             </div>
+        </pre>
+    </div>
+</div>
+<script>
+    function lw() {
+        var i = document.getElementById("inp").value;
+        var xhr = new XMLHttpRequest();
+
+        xhr.open("GET", "http://192.168.119.133/cgi-bin/kube.py?x=" + i, true);
+        xhr.send();
+
+        //output from above URL
+        xhr.onload = function () {
+            var output = xhr.responseText;
+            document.getElementById("output").innerHTML = output;
+        };
+    }
+</script>
+</body>
+</html>
+
